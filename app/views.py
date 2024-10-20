@@ -40,7 +40,7 @@ config = {
 
 firebase = pyrebase.initialize_app(config)
 if not firebase_admin._apps:
-    path = r'./kwathu-b7b68-firebase-adminsdk-mtu1r-6a2bda240a.json'
+    path = r'app/kwathu-b7b68-firebase-adminsdk-mtu1r-6a2bda240a.json'
     cred = credentials.Certificate(path)
     firebase_admin.initialize_app(cred)
 
