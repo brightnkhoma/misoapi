@@ -27,8 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["192.168.43.56",'https://miso-three.vercel.app']
 CORS_ALLOWED_ORIGINS = [
-    'https://misoapp.vercel.app/'
+    "https://misoapp.vercel.app",
 ]
+
 
 CORS_ALLOW_METHODS = [
     'GET',
