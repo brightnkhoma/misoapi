@@ -28,6 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     "misoapi-psi.vercel.app",  
     "misoapp.vercel.app",     
+    "misoapi-chc4mzjcm-bright-nkhomas-projects.vercel.app"
 ]
 
 
