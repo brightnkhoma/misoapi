@@ -48,8 +48,7 @@ def register(name : str,xpath : str):
     try:   
         db = firestore.client()
         dbDoc = db.collection("miso").document('data').collection('processed').document(name)
-        doc = dbDoc.document(name)
-        doc.set({"name" : name, "path" : xpath})
+        dbDoc.set({"name" : name, "path" : xpath})
         print(True)
         
     except Exception as e :
