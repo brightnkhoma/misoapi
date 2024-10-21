@@ -135,7 +135,7 @@ def toJsonResponse(data)->HttpResponse:
 def assignFile(request):
     if request.method == "OPTIONS":
         response = HttpResponse()
-        response['Access-Control-Allow-Origin'] = 'https://misoapp-fsd4bkrfj-bright-nkhomas-projects.vercel.app' 
+        response['Access-Control-Allow-Origin'] = '*' 
         response['Access-Control-Allow-Methods'] = 'POST'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
@@ -253,7 +253,7 @@ def create_person(request):
 def add_excel_data(request):
     if request.method == "OPTIONS":
         response = HttpResponse()
-        response['Access-Control-Allow-Origin'] = 'https://misoapp-fsd4bkrfj-bright-nkhomas-projects.vercel.app' 
+        response['Access-Control-Allow-Origin'] = '*' 
         response['Access-Control-Allow-Methods'] = 'POST'
         response['Access-Control-Allow-Headers'] = 'Content-Type'
         return response
