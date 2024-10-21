@@ -44,16 +44,16 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(path)
     firebase_admin.initialize_app(cred)
 
-def register(name : str,xpath : str):
-    try:   
-        db = firestore.client()
-        dbDoc = db.collection("miso").document('data').collection('processed').document(name)
-        dbDoc.set({"name" : name, "path" : xpath})
-        print(True)
+# def register(name : str,xpath : str):
+#     try:   
+#         db = firestore.client()
+#         dbDoc = db.collection("miso").document('data').collection('processed').document(name)
+#         dbDoc.set({"name" : name, "path" : xpath})
+#         print(True)
         
-    except Exception as e :
-        print(e)
-        return False   
+#     except Exception as e :
+#         print(e)
+#         return False   
 def download(path : str):
     file = requests.get(path)
     if file.status_code == 200:
@@ -113,8 +113,7 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str = "nk
             
     xpath =   create_path(my_workbook)
     url = upload(xpath,output_path)
-    register(output_path,url)
-    my_workbook.save("x.xlsx")
+    # register(output_path,url)
     
     print("done")
     # my_workbook.save(output_path)
