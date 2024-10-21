@@ -47,8 +47,8 @@ if not firebase_admin._apps:
 def register(name : str,xpath : str):
     try:   
         db = firestore.client()
-        db = db.collection("miso").document('data').collection('processed')
-        doc = db.document(name)
+        dbDoc = db.collection("miso").document('data').collection('processed').document(name)
+        doc = dbDoc.document(name)
         doc.set({"name" : name, "path" : xpath})
         print(True)
         
