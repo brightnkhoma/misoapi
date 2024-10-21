@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["misoapi-q48a.onrender.com","https://misoapp.vercel.app","misoapi-p3b5qmwyo-bright-nkhomas-projects.vercel.app","https://misoapp.vercel.app","misoapi-l8iw.vercel.app"]
 CORS_ALLOWED_ORIGINS = [
-    "https://misoapp-fsd4bkrfj-bright-nkhomas-projects.vercel.app", "https://misoapp.vercel.app"
+    "https://misoapp-fsd4bkrfj-bright-nkhomas-projects.vercel.app", "https://misoapp.vercel.app","misoapi-l8iw.vercel.app"
 ]
 
 
