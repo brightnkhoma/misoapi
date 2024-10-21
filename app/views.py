@@ -89,7 +89,7 @@ def load_external_reference(path : str)->list:
     return [rows for rows in myworkbook.active.iter_rows()]
   
 
-def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma" )->workbook.workbook.Workbook:
+def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma" ):
     #my_workbook = load_workbook(filename = target_path)
     my_workbook = download(target_path)
     my_rows = [rows for rows in my_workbook.active.iter_rows()]
@@ -117,7 +117,7 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str = "nk
     
     print("done")
     # my_workbook.save(output_path)
-    return my_workbook
+    return url
     
     
 def loadJsonData(data):
@@ -146,8 +146,8 @@ def assignFile(request):
             print(0)
             reference = load_reference()
             if name and path and reference:
-                add_phone_numbers(target_path = path,reference=reference,output_path=name)
-                return toJsonResponse({"status" : True,"message" : f"operation success"})
+                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name)
+                return toJsonResponse({"status" : True,"message" : f"{uri}"})
             else:
                 return toJsonResponse({"status" : False,"message" : f"info missing"})
         except Exception as e:
