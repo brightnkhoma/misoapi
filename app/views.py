@@ -88,6 +88,23 @@ def load_external_reference(path : str)->list:
     myworkbook = load_workbook(filename = path)
     return [rows for rows in myworkbook.active.iter_rows()]
   
+@csrf_exempt
+def clear_users(request):
+    if request.method == "OPTIONS":
+        response = HttpResponse()
+        response['Access-Control-Allow-Origin'] = '' 
+        response['Access-Control-Allow-Methods'] = 'POST'
+        response['Access-Control-Allow-Headers'] = 'Content-Type'
+        return response
+    elif request.method == "POST":
+        try:
+            Person.objects.all().delete()
+        except Exception as e:
+            print(e)
+            return toJsonResponse({"status" : False,"message" : f"something went wrong \n {e}"})
+
+
+
 
 def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma" ):
     #my_workbook = load_workbook(filename = target_path)
@@ -100,7 +117,6 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str = "nk
         header_target_final = 15
     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
 
-    print("i am her")
     
     for phone in enumerate(my_rows):
             if phone[0] != 0:
