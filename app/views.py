@@ -66,7 +66,7 @@ def download(path : str):
 def upload(my_path : str,name : str) :
     try:        
         storage = firebase.storage()
-        target_path = f"miso/processed/{name}"
+        target_path = f"miso/processed/" + name
         storage.child(target_path).put(my_path)
         download_url = storage.child(target_path).get_url(None)
         return download_url
