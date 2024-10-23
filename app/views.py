@@ -152,11 +152,11 @@ def assignFile(request):
                 return toJsonResponse({"status" : False,"message" : f"info missing"})
         except Exception as e:
             print(e)
-            return toJsonResponse({"status" : False,"message" : f"something went wrong"})
+            return toJsonResponse({"status" : False,"message" : f"something went wrong \n {e}"})
     else:
          print("not post")
          print(request.method)
-         return toJsonResponse({"status" : False,"message" : f"something went wrong"})
+         return toJsonResponse({"status" : False,"message" : f"not post, something went wrong"})
 
 
 
