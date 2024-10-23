@@ -98,7 +98,9 @@ def clear_users(request):
         return response
     elif request.method == "POST":
         try:
-            Person.objects.all().delete()
+           users = Person.objects.all()
+           for user in users:
+               user.delete()
         except Exception as e:
             print(e)
             return toJsonResponse({"status" : False,"message" : f"something went wrong \n {e}"})
