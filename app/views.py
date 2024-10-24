@@ -278,7 +278,8 @@ def add_excel_data(request):
         path = data.get("path")
         xpath = download(path=path)
         ref = create_path(xpath)
-        return populate_referance_from_file(file_name=ref)
+        populate_referance_from_file(file_name=ref)
+        return toJsonResponse({"status" : True,"message" : "Table updated"})
     else :
         return toJsonResponse({"status" : False,"message" : "invalid request"})
 
