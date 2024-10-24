@@ -29,7 +29,8 @@ ALLOWED_HOSTS = [
     "misoapi-psi.vercel.app",  
     "misoapp.vercel.app",     
     "misoapi-chc4mzjcm-bright-nkhomas-projects.vercel.app",
-    "misoapi-mrnnkxgfx-bright-nkhomas-projects.vercel.app"
+    "misoapi-mrnnkxgfx-bright-nkhomas-projects.vercel.app",
+    '127.0.0.1'
 ]
 
 

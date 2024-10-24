@@ -276,11 +276,8 @@ def add_excel_data(request):
     elif request.method == "POST":
         data = json.loads(request.body.decode())
         path = data.get("path")
-        print(1)
         xpath = download(path=path)
-        print(2)
         ref = create_path(xpath)
-        print(3)
         return populate_referance_from_file(file_name=ref)
     else :
         return toJsonResponse({"status" : False,"message" : "invalid request"})
@@ -367,6 +364,10 @@ def populate_referance_from_file(file_name):
                     )
                     participant.save()
                     form_numbers.append(form_number)
+            else:
+                user = Person.objects.get(form_number = form_number)
+                user.phoneNumber = row[header["Phone Number"]].value
+                user.save()
         return toJsonResponse({"status" : True, "message" : "operation complete"})
             
 
