@@ -137,6 +137,7 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
     
     print("done")
     # my_workbook.save(output_path)
+    print(reference)
     return url
     
     
