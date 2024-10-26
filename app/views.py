@@ -81,12 +81,12 @@ def create_path(my_workbook):
     return output
 
 def load_reference(path : str, name = str)->list:
-    # reference = Person.objects.all()
     data = download(path=path,name=name)
+
     rows = [row for row in data.active.iter_rows()]
+    print([cell.value for cell in rows[0]])
     refs = list(map(lambda person : [person[10].value, person[14].value], rows))
     # refs = list(map(lambda person : [person.phoneNumber,person.form_number],reference))
-    return refs
 
 def load_external_reference(path : str)->list:
     myworkbook = load_workbook(filename = path)
