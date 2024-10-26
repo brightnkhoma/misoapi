@@ -269,9 +269,8 @@ def checkIfCSV(path : str) -> bool:
 def csv_to_xlsx(csvpath):
     my_workbook = Workbook()
     sheet = my_workbook.active
-    with open(csvpath, mode='r') as file:
-        reader = csv.reader(file)
-        for row in reader:
+    reader = csv.reader(csvpath)
+    for row in reader:
             sheet.append(row)
     return my_workbook
 
