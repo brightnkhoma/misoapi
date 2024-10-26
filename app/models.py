@@ -32,3 +32,6 @@ class Person(models.Model):
     household_id = models.CharField(max_length=30,default="undefined", null=True, blank=True)
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name="person")   										
 
+class Forms(models.Model):
+    formNumber = models.CharField(max_length=30,null=True)
+    phoneNumber = models.CharField(max_length=30, null=True,blank=True)

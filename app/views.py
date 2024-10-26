@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Catchment,Person,Project
+from .models import Catchment,Person,Project,Forms
 from django.views.decorators.csrf import csrf_exempt
 from openpyxl import load_workbook
 import json
@@ -12,6 +12,9 @@ import firebase_admin
 from firebase_admin import credentials
 import csv
 from openpyxl import Workbook
+from django.db import transaction
+
+
 
 config = {
      "apiKey": "AIzaSyDGrA3lZhidUwBRar9zWiS4vXzgja0XTXQ",
@@ -50,7 +53,74 @@ if not firebase_admin._apps:
 #     except Exception as e :
 #         print(e)
 #         return False 
-#   
+# 
+
+def bulk_update_forms(forms_to_update):
+    with transaction.atomic():
+        Forms.objects.bulk_update(forms_to_update, ['phoneNumber'])
+
+def create_multiple_forms(forms_data):
+    with transaction.atomic():
+        Forms.objects.bulk_create(forms_data)
+    return True
+
+def addFormSnippets(reference : list):
+    try:
+        forms = Forms.objects.all()
+        existing_form_numbers = list(map(lambda value :value.formNumber ,forms))
+        forms_to_update = list(filter(lambda value:value in existing_form_numbers,reference))
+        forms_to_create = list(filter(lambda value:value not in existing_form_numbers,reference))
+        new_forms_to_create = list(filter(lambda value:value and value[0] ,forms_to_create))
+
+        my_forms_to_update = list(filter(lambda value:value.formNumber in forms_to_update ,existing_form_numbers))
+        my_forms_to_update_dict = dict((x,y) for x,y in forms_to_update)
+        my_forms_to_create = list(map(lambda value:Forms(formNumber = value[0],phoneNumber = value[1]) ,new_forms_to_create))
+        print(reference)
+        create_multiple_forms(my_forms_to_create)
+        if my_forms_to_update:
+            for form in my_forms_to_update:
+                form.formNumber = my_forms_to_update_dict[form.formNumber]
+            bulk_update_forms(my_forms_to_update)
+
+        print("all done")
+
+
+    except Exception as e:
+        print(e)
+
+def load_form_snippets_reference()-> list:
+    forms = Forms.objects.all()
+    refs = list(map(lambda value:[value.formNumber,value.phoneNumber],forms))
+    return refs
+
+
+@csrf_exempt
+def populateForms(request):
+        if request.method == "OPTIONS":
+            response = HttpResponse()
+            response['Access-Control-Allow-Origin'] = '' 
+            response['Access-Control-Allow-Methods'] = 'POST'
+            response['Access-Control-Allow-Headers'] = 'Content-Type'
+            return response
+        elif request.method == "POST":
+            try:
+                print(request.body.decode())
+                data = loadJsonData(request)
+                name = data.get("name")
+                path = data.get("path")
+                refs = load_reference(path=path,name=name)
+                if refs:
+                    addFormSnippets(reference=refs)
+                    return toJsonResponse({"status" : True, "message" : "files populated"})
+                else:
+                    return toJsonResponse({"status" : False, "message" : "no reference found"})
+            except Exception as e:
+                print(e)
+                return toJsonResponse({"status" : False, "message" : f"an error occured {e}"})
+            
+    
+
+  
 def download(path : str, name : str):
     file = requests.get(path)
     if file.status_code == 200:
@@ -182,8 +252,9 @@ def assignFile(request):
             path = data.get("path")
             refpath = data.get("ref")
             refname = data.get("refname")
+            fromSnippets = data.get("fromSnippets")
             print(0)
-            reference = load_reference(path = refpath,name=refname)
+            reference = load_reference(path = refpath,name=refname) if not fromSnippets else load_form_snippets_reference()
             if name and path and reference:
                 uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, filename= name)
                 return toJsonResponse({"status" : True,"message" : f"{uri}"})

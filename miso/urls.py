@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from app.views import create_catchment,create_project,create_person,add_excel_data,assignFile,clear_users
+from app.views import create_catchment,create_project,create_person,add_excel_data,assignFile,clear_users,populateForms
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +26,5 @@ urlpatterns = [
     path('feeddata/', add_excel_data),
     path('addnumber/', assignFile),
     path('clear/', clear_users),
+    path('populate/', populateForms),
 ]
