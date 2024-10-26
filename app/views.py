@@ -117,7 +117,15 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
     my_rows = [rows for rows in my_workbook.active.iter_rows()]
     header_target = 1
     header_formnumber = 0
-    header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
+    header_target_final = 17
+    if "Phone Number" in my_rows[9]:
+      header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
+    else:
+        my_workbook.active.insert_cols(len(my_rows[0] +1))
+        my_rows = [rows for rows in my_workbook.active.iter_rows()]
+        header_target_final(len(my_rows))
+
+
     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
 
     
