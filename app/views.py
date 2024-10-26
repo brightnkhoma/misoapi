@@ -164,7 +164,7 @@ def assignFile(request):
             print(0)
             reference = load_reference()
             if name and path and reference:
-                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, name = name)
+                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, filename= name)
                 return toJsonResponse({"status" : True,"message" : f"{uri}"})
             else:
                 return toJsonResponse({"status" : False,"message" : f"info missing"})
