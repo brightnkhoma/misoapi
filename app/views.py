@@ -264,7 +264,7 @@ def create_person(request):
     
 def checkIfCSV(path : str) -> bool:
     stringList = path.split(".")
-    return stringList[1] and stringList[1] != "csv"
+    return stringList[1] and stringList[1] == "csv"
 
 def csv_to_xlsx(csvpath):
     my_workbook = Workbook()
