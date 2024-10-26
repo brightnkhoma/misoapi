@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-_6+t-6ogx9mpzlk!$@%k3r$#i2zp268ze)elf0+3!^2f-83cbq
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    "misoapi-l8iw-dep800vhz-bright-nkhomas-projects.vercel.app",
     "misoapi-psi.vercel.app",  
     "misoapp.vercel.app",     
     "misoapi-chc4mzjcm-bright-nkhomas-projects.vercel.app",
@@ -33,7 +34,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     "misoapi-psf31wwmc-bright-nkhomas-projects.vercel.app",
     "misoapi-lzgtu29w2-bright-nkhomas-projects.vercel.app",
-    "misoapi-l8iw-qlgah1xcc-bright-nkhomas-projects.vercel.app"
+    "misoapi-l8iw-qlgah1xcc-bright-nkhomas-projects.vercel.app",    
 ]
 
 
