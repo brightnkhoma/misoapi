@@ -273,6 +273,7 @@ def csv_to_xlsx(csvpath):
         reader = csv.reader(file)
         for row in reader:
             sheet.append(row)
+    return my_workbook
 
 @csrf_exempt
 def add_excel_data(request):
