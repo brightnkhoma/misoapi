@@ -115,8 +115,8 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str = "nk
     #my_workbook = load_workbook(filename = target_path)
     my_workbook = download(target_path,name=filename)
     my_rows = [rows for rows in my_workbook.active.iter_rows()]
-    header_target = 0
-    header_formnumber = 1
+    header_target = 1
+    header_formnumber = 0
     header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
     if not header_target_final:
         header_target_final = 15
