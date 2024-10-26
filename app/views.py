@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from openpyxl import load_workbook
 import json
 from openpyxl import load_workbook
-from io import BytesIO
+from io import BytesIO, StringIO
 import requests
 import pyrebase
 import firebase_admin
@@ -269,7 +269,8 @@ def checkIfCSV(path : str) -> bool:
 def csv_to_xlsx(csvpath):
     my_workbook = Workbook()
     sheet = my_workbook.active
-    reader = csv.reader(csvpath)
+    text_content = StringIO(csvpath.getvalue().decode("utf-8"))
+    reader = csv.reader(text_content)
     for row in reader:
             sheet.append(row)
     return my_workbook
