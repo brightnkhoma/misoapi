@@ -71,8 +71,8 @@ def addFormSnippets(reference : list):
         forms_to_update = list(filter(lambda value:value in existing_form_numbers,reference))
         forms_to_create = list(filter(lambda value:value not in existing_form_numbers,reference))
         new_forms_to_create = list(filter(lambda value:value and value[0] ,forms_to_create))
-
-        my_forms_to_update = list(filter(lambda value:value.formNumber in forms_to_update ,existing_form_numbers))
+        onlyforms = [x[0] for x in forms_to_update]
+        my_forms_to_update = list(filter(lambda value:value.formNumber in onlyforms,existing_form_numbers))
         my_forms_to_update_dict = dict((x,y) for x,y in forms_to_update)
         my_forms_to_create = list(map(lambda value:Forms(formNumber = value[0],phoneNumber = value[1]) ,new_forms_to_create))
         print(reference)
