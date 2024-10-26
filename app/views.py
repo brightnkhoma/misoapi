@@ -54,7 +54,7 @@ def download(path : str, name : str):
     file = requests.get(path)
     if file.status_code == 200:
         file_content = BytesIO(file.content)
-        csv_check = checkIfCSV(name)
+        csv_check = checkIfCSV(path=name)
         if csv_check:
             return csv_to_xlsx(file_content)
         else:
@@ -110,7 +110,7 @@ def clear_users(request):
 
 def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma",filename : str = ""):
     #my_workbook = load_workbook(filename = target_path)
-    my_workbook = download(target_path, filename)
+    my_workbook = download(target_path,name=filename)
     my_rows = [rows for rows in my_workbook.active.iter_rows()]
     header_target = 0
     header_formnumber = 1
@@ -285,7 +285,8 @@ def add_excel_data(request):
     elif request.method == "POST":
         data = json.loads(request.body.decode())
         path = data.get("path")
-        xpath = download(path=path)
+        name = data.get("name")
+        xpath = download(path=path,name=name)
         ref = create_path(xpath)
         populate_referance_from_file(file_name=ref)
         return toJsonResponse({"status" : True,"message" : "Table updated"})
