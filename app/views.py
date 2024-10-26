@@ -120,10 +120,8 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
         max_cols = sheet.max_column
         new_max_cols = max_cols + 1
         sheet.insert_cols(new_max_cols)
-        print("hereeeee")
         cell = sheet.cell(row=1, column=new_max_cols)
         cell.value = "Phone Number"
-        print("nowwwwwww")
         my_rows = [rows for rows in sheet.iter_rows()]
         
     header_target = 1
