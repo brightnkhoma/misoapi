@@ -82,7 +82,7 @@ def create_path(my_workbook):
 def load_reference(path : str, name = str)->list:
     # reference = Person.objects.all()
     data = download(path=path,name=name)
-    rows = [row for row in data.iter_rows()]
+    rows = [row for row in data.active.iter_rows()]
     refs = list(map(lambda person : [person[10].value, person[14].value], rows))
     # refs = list(map(lambda person : [person.phoneNumber,person.form_number],reference))
     return refs
