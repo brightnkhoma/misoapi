@@ -79,9 +79,12 @@ def create_path(my_workbook):
     output.seek(0)
     return output
 
-def load_reference()->list:
-    reference = Person.objects.all()
-    refs = list(map(lambda person : [person.phoneNumber,person.form_number],reference))
+def load_reference(path : str, name = str)->list:
+    # reference = Person.objects.all()
+    data = download(path=path,name=name)
+    rows = [row for row in data.iter_rows()]
+    refs = list(map(lambda person : [person[10].value, person[14].value], rows))
+    # refs = list(map(lambda person : [person.phoneNumber,person.form_number],reference))
     return refs
 
 def load_external_reference(path : str)->list:
@@ -161,8 +164,10 @@ def assignFile(request):
             data = loadJsonData(request)
             name = data.get("name")
             path = data.get("path")
+            refpath = data.get("ref")
+            refname = data.get("refname")
             print(0)
-            reference = load_reference()
+            reference = load_reference(path = refpath,name=refname)
             if name and path and reference:
                 uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, filename= name)
                 return toJsonResponse({"status" : True,"message" : f"{uri}"})
