@@ -1,21 +1,17 @@
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.forms.models import model_to_dict
 from .models import Catchment,Person,Project
 from django.views.decorators.csrf import csrf_exempt
 from openpyxl import load_workbook
-from openpyxl import workbook
 import json
 from openpyxl import load_workbook
-from openpyxl import workbook
-from openpyxl import Workbook
 from io import BytesIO
 import requests
 import pyrebase
 import firebase_admin
 from firebase_admin import credentials
-from firebase_admin import firestore
+import csv
+from openpyxl import Workbook
 
 config = {
      "apiKey": "AIzaSyDGrA3lZhidUwBRar9zWiS4vXzgja0XTXQ",
@@ -54,12 +50,16 @@ if not firebase_admin._apps:
 #     except Exception as e :
 #         print(e)
 #         return False   
-def download(path : str):
+def download(path : str, name : str):
     file = requests.get(path)
     if file.status_code == 200:
         file_content = BytesIO(file.content)
-        file_workbook = load_workbook(file_content)
-        return file_workbook
+        csv_check = checkIfCSV(name)
+        if csv_check:
+            return csv_to_xlsx(file_content)
+        else:
+            file_workbook = load_workbook(file_content)
+            return file_workbook
     else:
         return False
 
@@ -108,9 +108,9 @@ def clear_users(request):
 
 
 
-def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma" ):
+def add_phone_numbers(target_path : str,reference : list,output_path : str = "nkhoma",filename : str = ""):
     #my_workbook = load_workbook(filename = target_path)
-    my_workbook = download(target_path)
+    my_workbook = download(target_path, filename)
     my_rows = [rows for rows in my_workbook.active.iter_rows()]
     header_target = 0
     header_formnumber = 1
@@ -164,7 +164,7 @@ def assignFile(request):
             print(0)
             reference = load_reference()
             if name and path and reference:
-                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name)
+                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, name = name)
                 return toJsonResponse({"status" : True,"message" : f"{uri}"})
             else:
                 return toJsonResponse({"status" : False,"message" : f"info missing"})
@@ -262,8 +262,17 @@ def create_person(request):
         print(e)
         return toJsonResponse({"status" : False,"message" : "something went wrong"})
     
+def checkIfCSV(path : str) -> bool:
+    stringList = path.split(".")
+    return stringList[1] and stringList[1] != "csv"
 
-
+def csv_to_xlsx(csvpath):
+    my_workbook = Workbook()
+    sheet = my_workbook.active
+    with open(csvpath, mode='r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            sheet.append(row)
 
 @csrf_exempt
 def add_excel_data(request):
