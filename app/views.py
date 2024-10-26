@@ -116,6 +116,7 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
     my_workbook = download(target_path,name=filename)
     sheet = my_workbook.active
     my_rows = [rows for rows in sheet.iter_rows()]
+   
     if "Phone Number" not in my_rows[0]:
         max_cols = sheet.max_column
         new_max_cols = max_cols + 1
@@ -128,6 +129,10 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
     header_formnumber = 0
     header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
+    forms = list(map(lambda value : value[formnumber_target_final].value ,my_rows))
+    filtered_reference = list(filter(lambda data: data[0] in forms ,reference))
+    print(len(reference))
+    print(len(filtered_reference))
   
 
     
@@ -135,9 +140,12 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
             if phone[0] != 0:
                 target_row = phone[1]
                 target_cell = target_row[header_target_final]
-                for value in reference:
+                for value in filtered_reference[:]:
                     if str(value[header_formnumber]) == str(target_row[formnumber_target_final].value):
                         target_cell.value = value[header_target]  
+                        filtered_reference.remove(value)
+                        break
+
                     
             
     xpath =   create_path(my_workbook)
@@ -146,7 +154,6 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str,filen
     
     print("done")
     # my_workbook.save(output_path)
-    print(reference)
     return url
     
     
