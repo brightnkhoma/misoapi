@@ -227,7 +227,7 @@ def create_project(request):
                 return toJsonResponse({"status" : False,"message" : "Failed to create Project, Maybe it already exists"})
     except Exception as e:
         print(e)
-        return toJsonResponse({"status" : False,"message" : "something went wrong"})
+        return toJsonResponse({"status" : False,"message" : f"something went wrong\n {e}"})
 
 @csrf_exempt
 def create_person(request):
@@ -260,7 +260,7 @@ def create_person(request):
                 return toJsonResponse({"status" : True,"message" : f"Person {full_name} created"})  
     except Exception as e:
         print(e)
-        return toJsonResponse({"status" : False,"message" : "something went wrong"})
+        return toJsonResponse({"status" : False,"message" :f"something went wrong \n {e}"})
     
 def checkIfCSV(path : str) -> bool:
     stringList = path.split(".")
