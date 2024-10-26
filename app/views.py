@@ -376,10 +376,10 @@ def populate_referance_from_file(file_name):
                     )
                     participant.save()
                     form_numbers.append(form_number)
-            else:
-                user = Person.objects.get(form_number = form_number)
-                user.phoneNumber = row[header["Phone Number"]].value
-                user.save()
+            # else:
+            #     user = Person.objects.get(form_number = form_number)
+            #     user.phoneNumber = row[header["Phone Number"]].value
+            #     user.save()
         return toJsonResponse({"status" : True, "message" : "operation complete"})
             
 
