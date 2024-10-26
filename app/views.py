@@ -114,19 +114,23 @@ def clear_users(request):
 def add_phone_numbers(target_path : str,reference : list,output_path : str,filename : str = ""):
     #my_workbook = load_workbook(filename = target_path)
     my_workbook = download(target_path,name=filename)
-    my_rows = [rows for rows in my_workbook.active.iter_rows()]
+    sheet = my_workbook.active
+    my_rows = [rows for rows in sheet.iter_rows()]
+    if "Phone Number" not in my_rows[0]:
+        max_cols = sheet.max_column
+        new_max_cols = max_cols + 1
+        sheet.insert_cols(new_max_cols)
+        print("hereeeee")
+        cell = sheet.cell(row=1, column=new_max_cols)
+        cell.value = "Phone Number"
+        print("nowwwwwww")
+        my_rows = [rows for rows in sheet.iter_rows()]
+        
     header_target = 1
     header_formnumber = 0
-    header_target_final = 17
-    if "Phone Number" in my_rows[9]:
-      header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
-    else:
-        my_workbook.active.insert_cols(len(my_rows[0] +1))
-        my_rows = [rows for rows in my_workbook.active.iter_rows()]
-        header_target_final(len(my_rows))
-
-
+    header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
+  
 
     
     for phone in enumerate(my_rows):
