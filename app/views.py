@@ -118,8 +118,6 @@ def add_phone_numbers(target_path : str,reference : list,output_path : str = "nk
     header_target = 1
     header_formnumber = 0
     header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
-    if not header_target_final:
-        header_target_final = 15
     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
 
     
@@ -267,9 +265,8 @@ def create_person(request):
         print(e)
         return toJsonResponse({"status" : False,"message" :f"something went wrong \n {e}"})
     
-def checkIfCSV(path : str) -> bool:
-    stringList = path.split(".")
-    return stringList[1] and stringList[1] == "csv"
+def checkIfCSV(path: str) -> bool:
+    return path.lower().endswith(".csv")
 
 def csv_to_xlsx(csvpath):
     my_workbook = Workbook()
