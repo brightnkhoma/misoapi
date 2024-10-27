@@ -55,9 +55,7 @@ if not firebase_admin._apps:
 #         return False 
 # 
 
-def bulk_update_forms(forms_to_update):
-    with transaction.atomic():
-        Forms.objects.bulk_update(forms_to_update, ['phoneNumber'])
+
 
 def create_multiple_forms(forms_data):
     with transaction.atomic():
@@ -80,7 +78,7 @@ def addFormSnippets(reference : list):
         if my_forms_to_update:
             for form in my_forms_to_update:
                 form.formNumber = my_forms_to_update_dict[form.formNumber]
-            bulk_update_forms(my_forms_to_update)
+                form.save()
 
         print("all done")
 
