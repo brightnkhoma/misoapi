@@ -66,19 +66,25 @@ def addFormSnippets(reference : list):
     try:
         forms = Forms.objects.all()
         existing_form_numbers = list(map(lambda value :value.formNumber ,forms))
-        forms_to_update = list(filter(lambda value:value in existing_form_numbers,reference))
-        forms_to_create = list(filter(lambda value:value not in existing_form_numbers,reference))
+        forms_to_update = list(filter(lambda value:value[0] in existing_form_numbers,reference))
+        forms_to_create = list(filter(lambda value:value[0] not in existing_form_numbers,reference))
         new_forms_to_create = list(filter(lambda value:value and value[0] ,forms_to_create))
-        onlyforms = [x[0] for x in forms_to_update]
-        my_forms_to_update = list(filter(lambda value:value.formNumber in onlyforms,existing_form_numbers))
-        my_forms_to_update_dict = dict((x,y) for x,y in forms_to_update)
         my_forms_to_create = list(map(lambda value:Forms(formNumber = value[0],phoneNumber = value[1]) ,new_forms_to_create))
-        print(reference)
+        print(reference in forms_to_update)
+        print(forms_to_update)
+        print(forms_to_create)
         create_multiple_forms(my_forms_to_create)
-        if my_forms_to_update:
-            for form in my_forms_to_update:
-                form.formNumber = my_forms_to_update_dict[form.formNumber]
-                form.save()
+        if forms_to_update:
+            for i in forms_to_update:
+                try:
+                 form = Forms.objects.get(formNumber = i[0])
+                 form.phoneNumber = i[1]
+                 print(form.formNumber, form.phoneNumber)
+                 form.save()
+                except Exception as e:
+                    print(e)
+
+
 
         print("all done")
 
@@ -90,6 +96,27 @@ def load_form_snippets_reference()-> list:
     forms = Forms.objects.all()
     refs = list(map(lambda value:[value.formNumber,value.phoneNumber],forms))
     return refs
+
+
+@csrf_exempt
+def clearAllSnippets(request):
+    if request.method == "OPTIONS":
+            response = HttpResponse()
+            response['Access-Control-Allow-Origin'] = '' 
+            response['Access-Control-Allow-Methods'] = 'POST'
+            response['Access-Control-Allow-Headers'] = 'Content-Type'
+            return response
+    elif request.method == "POST":
+            try:
+                forms = Forms.objects.all()
+                forms.delete()
+                return toJsonResponse({"status" : True, "message" : "deleted"})
+            except Exception as e:
+                print(e)
+                return toJsonResponse({"status" : False, "message" : e})
+    else:
+                        return toJsonResponse({"status" : False, "message" : "not post"})
+
 
 
 @csrf_exempt

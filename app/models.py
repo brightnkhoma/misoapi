@@ -33,5 +33,5 @@ class Person(models.Model):
     project = models.ForeignKey(Project,on_delete=models.CASCADE,related_name="person")   										
 
 class Forms(models.Model):
-    formNumber = models.CharField(max_length=30,null=True)
+    formNumber = models.CharField(max_length=30,unique=True)
     phoneNumber = models.CharField(max_length=30, null=True,blank=True)
