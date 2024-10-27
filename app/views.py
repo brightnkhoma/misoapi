@@ -281,7 +281,10 @@ def assignFile(request):
             print(0)
             reference = load_reference(path = refpath,name=refname) if not fromSnippets else load_form_snippets_reference()
             if name and path and reference:
-                uri = add_phone_numbers(target_path = path,reference=reference,output_path=name, filename= name)
+                fname = name if not checkIfCSV(name) else name.split(".")
+                newName = ".".join(fname[:-1])
+                newName = newName + ".xlsx"
+                uri = add_phone_numbers(target_path = path,reference=reference,output_path=newName , filename= name)
                 return toJsonResponse({"status" : True,"message" : f"{uri}"})
             else:
                 return toJsonResponse({"status" : False,"message" : f"info missing"})
