@@ -78,9 +78,10 @@ def addFormSnippets(reference : list):
             for i in forms_to_update:
                 try:
                  form = Forms.objects.get(formNumber = i[0])
-                 form.phoneNumber = i[1]
-                 print(form.formNumber, form.phoneNumber)
-                 form.save()
+                 if form.phoneNumber != i[1]:
+                    form.phoneNumber = i[1]
+                    print(form.formNumber, form.phoneNumber)
+                    form.save()
                 except Exception as e:
                     print(e)
 
