@@ -70,9 +70,6 @@ def addFormSnippets(reference : list):
         forms_to_create = list(filter(lambda value:value[0] not in existing_form_numbers,reference))
         new_forms_to_create = list(filter(lambda value:value and value[0] ,forms_to_create))
         my_forms_to_create = list(map(lambda value:Forms(formNumber = value[0],phoneNumber = value[1]) ,new_forms_to_create))
-        print(reference in forms_to_update)
-        print(forms_to_update)
-        print(forms_to_create)
         create_multiple_forms(my_forms_to_create)
         if forms_to_update:
             for i in forms_to_update:
@@ -134,6 +131,7 @@ def populateForms(request):
                 data = loadJsonData(request)
                 name = data.get("name")
                 path = data.get("path")
+                print("i am here")
                 refs = load_reference(path=path,name=name)
                 if refs:
                     addFormSnippets(reference=refs)
@@ -153,7 +151,8 @@ def download(path : str, name : str):
         file_content = BytesIO(file.content)
         csv_check = checkIfCSV(path=name)
         if csv_check:
-            return csv_to_xlsx(file_content)
+            file = csv_to_xlsx(file_content)
+            return file
         else:
             file_workbook = load_workbook(file_content)
             return file_workbook
@@ -177,9 +176,13 @@ def create_path(my_workbook):
     return output
 
 def load_reference(path : str, name = str)->list:
+    print("first")
     data = download(path=path,name=name)
+    print(1)
     rows = [row for row in data.active.iter_rows()]
+    print(2)
     refs = list(map(lambda person : [person[10].value, person[14].value], rows))
+    print(3)
     return refs
     # refs = list(map(lambda person : [person.phoneNumber,person.form_number],reference))
 
