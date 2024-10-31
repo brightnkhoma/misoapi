@@ -70,6 +70,7 @@ def addFormSnippets(reference : list):
         forms_to_create = list(filter(lambda value:value[0] not in existing_form_numbers,reference))
         new_forms_to_create = list(filter(lambda value:value and value[0] ,forms_to_create))
         my_forms_to_create = list(map(lambda value:Forms(formNumber = value[0],phoneNumber = value[1]) ,new_forms_to_create))
+        
         create_multiple_forms(my_forms_to_create)
         if forms_to_update:
             for i in forms_to_update:
@@ -134,6 +135,7 @@ def populateForms(request):
                 print("i am here")
                 refs = load_reference(path=path,name=name)
                 if refs:
+                    print("adding")
                     addFormSnippets(reference=refs)
                     return toJsonResponse({"status" : True, "message" : "files populated"})
                 else:
@@ -208,52 +210,90 @@ def clear_users(request):
             return toJsonResponse({"status" : False,"message" : f"something went wrong \n {e}"})
 
 
-
-
-def add_phone_numbers(target_path : str,reference : list,output_path : str,filename : str = ""):
-    #my_workbook = load_workbook(filename = target_path)
-    my_workbook = download(target_path,name=filename)
+def add_phone_numbers(target_path: str, reference: list, output_path: str, filename: str = ""):
+    my_workbook = download(target_path, name=filename)
     sheet = my_workbook.active
-    my_rows = [rows for rows in sheet.iter_rows()]
+    my_rows = list(sheet.iter_rows(values_only=True))
    
     if "Phone Number" not in my_rows[0]:
         max_cols = sheet.max_column
-        new_max_cols = max_cols + 1
-        sheet.insert_cols(new_max_cols)
-        cell = sheet.cell(row=1, column=new_max_cols)
-        cell.value = "Phone Number"
-        my_rows = [rows for rows in sheet.iter_rows()]
+        sheet.insert_cols(max_cols + 1)
+        sheet.cell(row=1, column=max_cols + 1).value = "Phone Number"
+        my_rows = list(sheet.iter_rows(values_only=True))  
+
+    phone_col_index = my_rows[0].index("Phone Number") 
+    formnumber_col_index = my_rows[0].index("form_number")
+
+    reference_dict = {str(data[0]): data[1] for data in reference if data[0] is not None}
+
+    for row_idx, row in enumerate(my_rows):
+        if row_idx == 0:  
+            continue
         
-    header_target = 1
-    header_formnumber = 0
-    header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
-    formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
-    forms = list(map(lambda value : value[formnumber_target_final].value ,my_rows))
-    filtered_reference = list(filter(lambda data: data[0] in forms ,reference))
-    print(len(reference))
-    print(len(filtered_reference))
-  
+        form_number = str(row[formnumber_col_index])
+        phone_number = reference_dict.get(form_number)
+        
+        if phone_number:
+            sheet.cell(row=row_idx + 1, column=phone_col_index + 1, value=phone_number)
+    
+    xpath = create_path(my_workbook)
+    url = upload(xpath, output_path)
+    
+    print("done")
+    return url
+
+
+
+# def add_phone_numbers(target_path : str,reference : list,output_path : str,filename : str = ""):
+#     #my_workbook = load_workbook(filename = target_path)
+#     my_workbook = download(target_path,name=filename)
+#     sheet = my_workbook.active
+#     my_rows = [rows for rows in sheet.iter_rows()]
+   
+#     if "Phone Number" not in my_rows[0]:
+#         max_cols = sheet.max_column
+#         new_max_cols = max_cols + 1
+#         sheet.insert_cols(new_max_cols)
+#         cell = sheet.cell(row=1, column=new_max_cols)
+#         cell.value = "Phone Number"
+#         my_rows = [rows for rows in sheet.iter_rows()]
+        
+#     header_target = 1
+#     header_formnumber = 0
+#     header_target_final = [ref.value for ref in my_rows[0]].index("Phone Number") 
+#     formnumber_target_final = [ref.value for ref in my_rows[0]].index("form_number")
+#     forms = list(map(lambda value : value[formnumber_target_final].value ,my_rows))
+#     filtered_reference = list(filter(lambda data: data[0] in forms ,reference))
+#     print(len(reference))
+#     print(len(filtered_reference))
+#     forms = [i[formnumber_target_final].value for i in my_rows]
+#     refs = list(filter(lambda x: x[0] in forms ,reference))
+#     print(len(reference))
+
+#     reference = refs
+#     print(len(refs))
+
 
     
-    for phone in enumerate(my_rows):
-            if phone[0] != 0:
-                target_row = phone[1]
-                target_cell = target_row[header_target_final]
-                for value in filtered_reference[:]:
-                    if str(value[header_formnumber]) == str(target_row[formnumber_target_final].value):
-                        target_cell.value = value[header_target]  
-                        filtered_reference.remove(value)
-                        break
+    # for phone in enumerate(my_rows):
+    #         if phone[0] != 0:
+    #             target_row = phone[1]
+    #             target_cell = target_row[header_target_final]
+    #             for value in filtered_reference[:]:
+    #                 if str(value[header_formnumber]) == str(target_row[formnumber_target_final].value):
+    #                     target_cell.value = value[header_target]  
+    #                     filtered_reference.remove(value)
+    #                     break
 
                     
             
-    xpath =   create_path(my_workbook)
-    url = upload(xpath,output_path)
-    # register(output_path,url)
+    # xpath =   create_path(my_workbook)
+    # url = upload(xpath,output_path)
+    # # register(output_path,url)
     
-    print("done")
-    # my_workbook.save(output_path)
-    return url
+    # print("done")
+    # # my_workbook.save(output_path)
+    # return url
     
     
 def loadJsonData(data):
